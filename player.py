@@ -5,6 +5,10 @@ class Player(CircleShape):
     def __init__(self, x, y, radius):
         super().__init__(x,y,PLAYER_RADIUS)
         self.rotation = 0
+        # Create a transparent surface
+        surface_size = int(radius * 2.5)
+        self.image = pygame.Surface((surface_size,surface_size), pygame.SRCALPHA)
+        self.rect = self.image.get_rect(center=self.position)
     
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -31,6 +35,19 @@ class Player(CircleShape):
             self.move(dt)
         if keys[pygame.K_s]:
             self.move(-dt)
+
+        # Update rect position
+        self.rect.center = self.position
+        
+        # Clear previous drawing
+        self.image.fill((0,0,0,0))
+        
+        # Convert triangle points to local coordinates
+        local_points = [point - self.position + pygame.Vector2(self.image.get_width()/2, self.image.get_height()/2) 
+                    for point in self.triangle()]
+        
+        # Draw triangle on image surface
+        pygame.draw.polygon(self.image, (255,255,255), local_points, 2)
 
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
