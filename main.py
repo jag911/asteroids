@@ -42,5 +42,19 @@ def main():
         
         dt = py_clock.tick(60) / 1000
 
+        for asteroid in asteroids:
+            if asteroid.collision(player):
+                # Create font object (None uses default system font)
+                font = pygame.font.Font(None, 74)  # 74 is font size
+                # Render the text (text, anti-aliasing, color)
+                text = font.render("Game Over", True, (255, 0, 0))  # Red text
+                # Get the rectangle for positioning
+                text_rect = text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+                # Draw to screen
+                screen.blit(text, text_rect)
+                pygame.display.flip()
+                pygame.time.wait(1000)
+                exit()
+
 if __name__ == "__main__":
     main()
