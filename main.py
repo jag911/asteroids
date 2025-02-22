@@ -48,6 +48,11 @@ def main():
         dt = py_clock.tick(60) / 1000
 
         for asteroid in asteroids:
+            for shot in shots:
+                if asteroid.collision(shot):
+                    shot.kill()
+                    asteroid.kill()
+
             if asteroid.collision(player):
                 # Create font object (None uses default system font)
                 font = pygame.font.Font(None, 74)  # 74 is font size
