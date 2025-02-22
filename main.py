@@ -31,7 +31,7 @@ def main():
     Shot.containers = (shots,updatable,drawable)
 
     player = Player(SCREEN_WIDTH/2,SCREEN_HEIGHT/2,PLAYER_RADIUS,shots)
-    asteroid_field = AsteroidField()
+    asteroid_field = AsteroidField(asteroids,updatable,drawable)
 
     while True:
         #catch a break!
@@ -51,7 +51,7 @@ def main():
             for shot in shots:
                 if asteroid.collision(shot):
                     shot.kill()
-                    asteroid.kill()
+                    asteroid.split()
 
             if asteroid.collision(player):
                 # Create font object (None uses default system font)
