@@ -1,10 +1,12 @@
 from circleshape import *
 from constants import *
+from shot import *
 
 class Player(CircleShape):
-    def __init__(self, x, y, radius):
+    def __init__(self, x, y, radius, shots):
         super().__init__(x,y,PLAYER_RADIUS)
         self.rotation = 0
+        self.shots = shots
         # Create a transparent surface
         surface_size = int(radius * 2.5)
         self.image = pygame.Surface((surface_size,surface_size), pygame.SRCALPHA)
@@ -35,6 +37,8 @@ class Player(CircleShape):
             self.move(dt)
         if keys[pygame.K_s]:
             self.move(-dt)
+        if keys[pygame.K_SPACE]:
+            self.shoot(dt)
 
         # Update rect position
         self.rect.center = self.position
@@ -52,3 +56,10 @@ class Player(CircleShape):
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
+
+    def shoot(self,dt):
+        shot = Shot(self.position.x,self.position.y)
+        velocity = pygame.Vector2(0, 1).rotate(self.rotation)
+        #shot.position = self.position
+        shot.velocity = velocity * PLAYER_SHOOT_SPEED
+        self.shots.add(shot)
