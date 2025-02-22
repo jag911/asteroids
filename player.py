@@ -3,10 +3,11 @@ from constants import *
 from shot import *
 
 class Player(CircleShape):
-    def __init__(self, x, y, radius, shots):
+    def __init__(self, x, y, radius, shots, timer = 0):
         super().__init__(x,y,PLAYER_RADIUS)
         self.rotation = 0
         self.shots = shots
+        self.cooldown = timer
         # Create a transparent surface
         surface_size = int(radius * 2.5)
         self.image = pygame.Surface((surface_size,surface_size), pygame.SRCALPHA)
@@ -58,8 +59,10 @@ class Player(CircleShape):
         self.position += forward * PLAYER_SPEED * dt
 
     def shoot(self,dt):
-        shot = Shot(self.position.x,self.position.y)
-        velocity = pygame.Vector2(0, 1).rotate(self.rotation)
-        #shot.position = self.position
-        shot.velocity = velocity * PLAYER_SHOOT_SPEED
-        self.shots.add(shot)
+        if self.cooldown <= 0:
+            self.cooldown = PLAYER_SHOOT_COOLDOWN
+            shot = Shot(self.position.x,self.position.y)
+            velocity = pygame.Vector2(0, 1).rotate(self.rotation)
+            shot.velocity = velocity * PLAYER_SHOOT_SPEED
+            self.shots.add(shot)
+        self.cooldown -= dt
